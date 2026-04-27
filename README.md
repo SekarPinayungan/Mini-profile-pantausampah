@@ -2,7 +2,7 @@
 ---
 
 # Kelompok 4 UT
-# Tugas Modul 6: Membangun Landing Page
+# Tugas Modul 7: Membuat Aplikasi bertema Company Profile
 # Nama Website: PantauSampah
 
 ---
