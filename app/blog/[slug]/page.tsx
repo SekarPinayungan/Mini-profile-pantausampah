@@ -87,8 +87,7 @@ export default async function ArticleDetailPage(
           <div className="mt-5 pt-4 border-top text-center">
             <p className="text-muted mb-4 small">
               Artikel ini bersumber dari <strong>{article.source}</strong>.
-              Untuk konten lengkap, kunjungi situs aslinya.
-            </p>
+              </p>
             <div className="d-flex gap-3 justify-content-center flex-wrap">
               {article.url && article.url !== '#' && (
                 <a
