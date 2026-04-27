@@ -1,0 +1,191 @@
+body {
+    font-family: 'Niramit', sans-serif;
+    background-color: #f9faf9;
+    color: #333;
+}
+
+h1, h2, h3, h4, h5 {
+    color: #1b5e20;
+}
+
+/* navbar */
+.navbar {
+    background-color: #ffffff;
+}
+
+.navbar-brand {
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.pantau {
+    color: #2e7d32;
+}
+
+.sampah {
+    color: #66bb6a;
+}
+
+.nav-link {
+    color: #555;
+    margin-left: 10px;
+    transition: 0.2s;
+}
+
+.nav-link:hover {
+    color: #2e7d32;
+}
+
+/* banner */
+.banner {
+    padding: 80px 0;
+    background: linear-gradient(#ffffff, #f3f5f3) shadow(0 4px 20px rgba(0,0,0,0.1));
+}
+
+/* judul */
+.banner h1 {
+    font-size: 48px;
+    font-weight: 700;
+}
+
+.banner h2 {
+    font-size: 32px;
+    color: #555;
+}
+
+/* slogan */
+.slogan {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    color: #2e7d32;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    background: #2e7d32;
+    border-radius: 50%;
+}
+
+/* card hijau */
+.banner-card {
+    margin-top: 40px;
+    background: #a5d6a7;
+    padding: 30px;
+    border-radius: 20px;
+}
+
+/* statistik */
+.stat-box iconify-icon {
+    background: #2e7d32;
+    color: white;
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 5px;
+}
+
+.stat-box h5 {
+    margin: 5px 0;
+    font-weight: 700;
+}
+
+/* layanan */
+.layanan-card {
+    border-radius: 20px;
+    transition: 0.3s;
+    border: none;
+}
+
+.layanan-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+
+.layanan-card iconify-icon {
+    color: #2e7d32;
+}
+
+/* DaftarAkun */
+.cta-dlh {
+    max-width: 900px;
+    width: 100%;
+    background: linear-gradient(135deg, #f1f8f4, #ffffff);
+    border-radius: 24px;
+}
+
+.img-dlh {
+    max-width: 220px;
+}
+
+.fitur-highlight {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.fitur-highlight span {
+    background: #e8f5e9;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: #2e7d32;
+}
+
+/* berita */
+.berita-card {
+    border-radius: 20px;
+    overflow: hidden;
+    transition: 0.3s;
+    border: none;
+}
+
+.berita-card img {
+    height: 180px;
+    object-fit: cover;
+}
+
+.berita-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+}
+
+.berita .btn {
+    border-radius: 20px;
+    padding: 4px 12px;
+}
+
+/* footer */
+.footer {
+    background-color: #f1f8f4;
+}
+
+/* biar nggak melebar banget */
+.footer .row {
+    max-width: 1000px;
+    margin: auto;
+}
+
+/* menu */
+.footer .nav-link {
+    color: #555;
+    transition: 0.2s;
+}
+
+.footer .nav-link:hover {
+    color: #2e7d32;
+}
+
+/* kontak link */
+.kontak-list a {
+    color: #555;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: 0.2s;
+}
+
+.kontak-list a:hover {
+    color: #2e7d32;
+    border-bottom: 1px solid #2e7d32;
+}
