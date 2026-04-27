@@ -1,93 +1,148 @@
 import { Metadata } from 'next';
-import Link from "next/link";
-import { getArticles } from "../../../lib/api";
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { getArticleBySlug, getRelatedArticles } from '@/lib/api';
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export const dynamic = 'force-dynamic';
+
+export async function generateMetadata(
+  { params }: { params: Promise<{ slug: string }> }
+): Promise<Metadata> {
   const { slug } = await params;
-  const articles = await getArticles();
-  const article = articles.find((a: any) => a.slug === slug);
-  
+  const article = await getArticleBySlug(slug);
   return {
-    title: article ? `${article.title} | PantauSampah` : 'Artikel Tidak Ditemukan',
-    description: article?.desc || 'Baca informasi terbaru seputar pengelolaan sampah di PantauSampah.',
+    title: article ? `${article.title} | PantauSampah` : 'Artikel | PantauSampah',
+    description: article?.desc ?? 'Baca informasi terbaru seputar pengelolaan sampah.',
     openGraph: {
       title: article?.title,
       description: article?.desc,
-      images: article ? [article.img] : [],
+      images: article?.img ? [article.img] : [],
     },
   };
 }
 
-export default async function Article({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ArticleDetailPage(
+  { params }: { params: Promise<{ slug: string }> }
+) {
   const { slug } = await params;
-  
-  const articles = await getArticles();
-  
-  const article = articles.find((a: any) => a.slug === slug);
+  const article = await getArticleBySlug(slug);
 
   if (!article) {
-    return (
-      <div className="container py-5 text-center" style={{ minHeight: "60vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-        <h2 className="fw-bold mt-5">Artikel Tidak Ditemukan</h2>
-        <p className="text-muted mb-4">Maaf, artikel yang Anda cari tidak tersedia atau telah dihapus.</p>
-        <Link href="/" className="btn btn-success px-4 rounded-pill">
-          Kembali ke Beranda
-        </Link>
-      </div>
-    );
+    notFound();
   }
 
+  const relatedArticles = await getRelatedArticles(article.title, slug);
+
   return (
-    <section className="py-5 bg-white">
-      <div className="container" style={{ maxWidth: "800px" }}>
-        <div className="mb-4">
-          <Link href="/" className="text-success text-decoration-none fw-semibold d-inline-flex align-items-center mb-4 transition" style={{ fontSize: "0.95rem" }}>
-            <span className="me-2">←</span> Kembali ke Beranda
-          </Link>
-          
-          <h1 className="fw-bold mb-3" style={{ fontSize: "2.8rem", lineHeight: "1.2", letterSpacing: "-0.02em" }}>
+    <>
+      {/* Article Content */}
+      <section className="py-5 bg-white">
+        <div className="container" style={{ maxWidth: '800px' }}>
+
+          {/* Breadcrumb */}
+          <nav className="mb-4">
+            <Link href="/blog" className="text-success text-decoration-none fw-semibold" style={{ fontSize: '0.95rem' }}>
+              ← Kembali ke Blog
+            </Link>
+          </nav>
+
+          {/* Title */}
+          <h1 className="fw-bold mb-3" style={{ fontSize: '2.2rem', lineHeight: '1.25', letterSpacing: '-0.01em' }}>
             {article.title}
           </h1>
-          
-          <div className="d-flex align-items-center text-muted mb-4 pb-3 border-bottom">
-            <span className="d-flex align-items-center bg-light px-3 py-1 rounded-pill" style={{ fontSize: "0.85rem" }}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" className="bi bi-calendar3 me-2" viewBox="0 0 16 16">
-                <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857V3.857z"/>
-              </svg>
-              Dipublikasikan {article.time}
+
+          {/* Meta */}
+          <div className="d-flex align-items-center gap-3 text-muted mb-5 pb-4 border-bottom" style={{ fontSize: '0.85rem' }}>
+            <span className="badge bg-success bg-opacity-10 text-success px-3 py-1 rounded-pill">
+              {article.source}
             </span>
+            <span>{article.time}</span>
           </div>
-        </div>
-        
-        <div className="mb-5 rounded-4 overflow-hidden shadow-sm" style={{ aspectRatio: "16/9" }}>
-          <img 
-            src={article.img} 
-            className="img-fluid w-100 h-100" 
-            alt={article.title} 
-            style={{ objectFit: "cover" }} 
-          />
-        </div>
-        
-        <div className="article-content text-dark" style={{ fontSize: "1.15rem", lineHeight: "1.85", color: "#2d3436" }}>
-          <p className="fw-semibold text-muted mb-5 fs-5" style={{ borderLeft: "4px solid #2e7d32", paddingLeft: "1.5rem", fontStyle: "italic" }}>
+
+          {/* Hero Image */}
+          <div className="mb-5 rounded-4 overflow-hidden shadow-sm" style={{ aspectRatio: '16/9' }}>
+            <img
+              src={article.img}
+              alt={article.title}
+              className="w-100 h-100"
+              style={{ objectFit: 'cover' }}
+            />
+          </div>
+
+          {/* Description callout */}
+          <p className="lead fw-semibold text-muted mb-5" style={{ borderLeft: '4px solid #2e7d32', paddingLeft: '1.25rem', fontStyle: 'italic' }}>
             {article.desc}
           </p>
-          
-          {article.content?.map((paragraph, index) => (
-            <p key={index} className="mb-4" style={{ textAlign: "justify" }}>
-              {paragraph}
+
+          {/* Body */}
+          <div style={{ fontSize: '1.1rem', lineHeight: '1.85', color: '#2d3436' }}>
+            {(article.content ?? []).map((paragraph, i) => (
+              <p key={i} className="mb-4" style={{ textAlign: 'justify' }}>
+                {paragraph}
+              </p>
+            ))}
+          </div>
+
+          {/* CTA */}
+          <div className="mt-5 pt-4 border-top text-center">
+            <p className="text-muted mb-4 small">
+              Artikel ini bersumber dari <strong>{article.source}</strong>.
+              Untuk konten lengkap, kunjungi situs aslinya.
             </p>
-          ))}
+            <div className="d-flex gap-3 justify-content-center flex-wrap">
+              {article.url && article.url !== '#' && (
+                <a
+                  href={article.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-outline-success rounded-pill px-5 py-2 fw-semibold"
+                >
+                  Baca Selengkapnya
+                </a>
+              )}
+              <Link href="/contact" className="btn btn-success rounded-pill px-5 py-2 fw-semibold">
+                Hubungi Kami
+              </Link>
+            </div>
+          </div>
         </div>
-        
-        <div className="mt-5 pt-5 border-top text-center">
-          <p className="text-muted mb-4">Ingin tahu lebih banyak tentang pengelolaan sampah?</p>
-          <Link href="/contact" className="btn btn-success px-5 py-2 rounded-pill fw-bold shadow-sm">
-            Hubungi Kami
-          </Link>
-        </div>
-      </div>
-    </section>
+      </section>
+
+      {/* Related Articles */}
+      {relatedArticles.length > 0 && (
+        <section className="py-5 bg-light border-top">
+          <div className="container">
+            <h3 className="fw-bold mb-4">Artikel Terkait</h3>
+            <div className="row g-4">
+              {relatedArticles.map((item, index) => (
+                <div className="col-md-4" key={index}>
+                  <div className="card berita-card h-100 shadow-sm border-0 rounded-4">
+                    <div className="overflow-hidden rounded-top-4" style={{ height: '180px' }}>
+                      <img
+                        src={item.img}
+                        alt={item.title}
+                        className="card-img-top h-100 w-100"
+                        style={{ objectFit: 'cover' }}
+                      />
+                    </div>
+                    <div className="card-body p-4">
+                      <h5 className="card-title fw-bold mb-2" style={{ fontSize: '1rem', lineHeight: '1.4' }}>
+                        {item.title}
+                      </h5>
+                      <div className="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                        <small className="text-muted">{item.time}</small>
+                        <Link href={`/blog/${item.slug}`} className="text-success fw-semibold small text-decoration-none">
+                          Baca →
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+    </>
   );
 }
-

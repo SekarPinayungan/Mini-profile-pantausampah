@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/SekarPinayungan/PantauSampah#readme",
   "dependencies": {
+    "fast-xml-parser": "^5.7.2",
     "lucide-react": "^1.11.0",
     "next": "^16.2.4",
     "react": "^19.2.5",
